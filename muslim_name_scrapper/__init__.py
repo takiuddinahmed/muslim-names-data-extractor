@@ -17,6 +17,13 @@ try:
 except ImportError:
     _has_kaggle = False
 
+# Hugging Face uploader is optional (requires huggingface_hub package)
+try:
+    from .huggingface_uploader import HuggingFaceUploader
+    _has_huggingface = True
+except ImportError:
+    _has_huggingface = False
+
 __version__ = "2.0.0"
 __author__ = "Md Takiuddin"
 __email__ = "contact@takiuddin.me"
@@ -35,3 +42,7 @@ __all__ = [
 # Add KaggleUploader to exports if available
 if _has_kaggle:
     __all__.append('KaggleUploader')
+
+# Add HuggingFaceUploader to exports if available
+if _has_huggingface:
+    __all__.append('HuggingFaceUploader')

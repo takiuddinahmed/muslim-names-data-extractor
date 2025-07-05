@@ -215,8 +215,51 @@ class MuslimNamesScraper:
             self.logger.error(f"Error uploading to Kaggle: {e}")
             return {'success': False, 'error': str(e), 'action': 'failed'}
     
-    def scrape_all(self, output_dir=None, max_pages=None, upload_kaggle=False, kaggle_title=None, kaggle_public=None, kaggle_update=False):
-        """Main method to scrape all names with immediate saving and optional Kaggle upload"""
+    def upload_to_huggingface(self, file_paths, title=None, description=None, private=None, update_existing=False, dataset_id=None):
+        """Upload scraped data to Hugging Face Hub"""
+        try:
+            from .huggingface_uploader import HuggingFaceUploader
+            
+            # Prepare files for upload (exclude progress file)
+            upload_files = [
+                file_paths['csv'],
+                file_paths['json'],
+                file_paths['sqlite']
+            ]
+            
+            # Use config defaults if not specified
+            if private is None:
+                private = self.config.get('huggingface.default_private', False)
+            
+            hf_uploader = HuggingFaceUploader()
+            
+            self.logger.info("Starting Hugging Face dataset upload...")
+            result = hf_uploader.upload_dataset(
+                files=upload_files,
+                title=title,
+                description=description,
+                private=private,
+                update_existing=update_existing,
+                dataset_id=dataset_id
+            )
+            
+            if result['success']:
+                self.logger.info(f"Successfully {result['action']} Hugging Face dataset!")
+                self.logger.info(f"Dataset URL: {result['dataset_url']}")
+            else:
+                self.logger.error(f"Failed to upload to Hugging Face: {result['error']}")
+            
+            return result
+            
+        except ImportError:
+            self.logger.error("huggingface_hub package not installed. Install with: pip install huggingface_hub")
+            return {'success': False, 'error': 'huggingface_hub package not installed', 'action': 'failed'}
+        except Exception as e:
+            self.logger.error(f"Error uploading to Hugging Face: {e}")
+            return {'success': False, 'error': str(e), 'action': 'failed'}
+    
+    def scrape_all(self, output_dir=None, max_pages=None, upload_kaggle=False, kaggle_title=None, kaggle_public=None, kaggle_update=False, upload_huggingface=False, hf_title=None, hf_private=None, hf_update=False, hf_dataset_id=None):
+        """Main method to scrape all names with immediate saving and optional uploads"""
         start_time = time.time()
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
@@ -300,6 +343,17 @@ class MuslimNamesScraper:
                     update_existing=kaggle_update
                 )
                 result['kaggle'] = kaggle_result
+            
+            # Upload to Hugging Face if requested
+            if upload_huggingface:
+                hf_result = self.upload_to_huggingface(
+                    file_paths=file_paths,
+                    title=hf_title,
+                    private=hf_private,
+                    update_existing=hf_update,
+                    dataset_id=hf_dataset_id
+                )
+                result['huggingface'] = hf_result
             
             return result
             

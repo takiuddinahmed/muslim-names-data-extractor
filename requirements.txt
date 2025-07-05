@@ -7,3 +7,5 @@ urllib3>=1.26.5
 PyYAML>=6.0
 # Optional: for Kaggle dataset uploads
 kaggle>=1.5.12
+# Optional: for Hugging Face dataset uploads
+huggingface_hub>=0.20.0

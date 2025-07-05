@@ -72,6 +72,32 @@ def main():
         help='Update existing Kaggle dataset instead of creating new one'
     )
     
+    # Hugging Face upload options
+    parser.add_argument(
+        '--upload-huggingface', action='store_true',
+        help='Upload dataset to Hugging Face Hub after scraping'
+    )
+    
+    parser.add_argument(
+        '--hf-title', type=str, default=None,
+        help='Custom title for Hugging Face dataset (default: auto-generated)'
+    )
+    
+    parser.add_argument(
+        '--hf-private', action='store_true',
+        help=f'Make Hugging Face dataset private (default: {"private" if config.get("huggingface.default_private", False) else "public"})'
+    )
+    
+    parser.add_argument(
+        '--hf-update', action='store_true',
+        help='Update existing Hugging Face dataset instead of creating new one'
+    )
+    
+    parser.add_argument(
+        '--hf-dataset-id', type=str, default=None,
+        help='Specify Hugging Face dataset ID for uploads (default: auto-generated)'
+    )
+    
     # Configuration options
     parser.add_argument(
         '--config', type=str, default=None,
@@ -107,7 +133,12 @@ def main():
             upload_kaggle=args.upload_kaggle,
             kaggle_title=args.kaggle_title,
             kaggle_public=not args.kaggle_private,
-            kaggle_update=args.kaggle_update
+            kaggle_update=args.kaggle_update,
+            upload_huggingface=args.upload_huggingface,
+            hf_title=args.hf_title,
+            hf_private=args.hf_private,
+            hf_update=args.hf_update,
+            hf_dataset_id=args.hf_dataset_id
         )
         
         # Display results
@@ -141,6 +172,18 @@ def main():
                 print(f"  🆔 Dataset ID: {kaggle_result['dataset_id']}")
             else:
                 print(f"  ❌ Upload failed: {kaggle_result['error']}")
+        
+        # Display Hugging Face upload results
+        if args.upload_huggingface and 'huggingface' in result:
+            hf_result = result['huggingface']
+            print(f"\nHugging Face Upload:")
+            if hf_result['success']:
+                print(f"  ✅ Successfully {hf_result['action']} dataset")
+                print(f"  🔗 URL: {hf_result['dataset_url']}")
+                print(f"  🆔 Dataset ID: {hf_result['dataset_id']}")
+                print(f"  📁 Files: {', '.join(hf_result['uploaded_files'])}")
+            else:
+                print(f"  ❌ Upload failed: {hf_result['error']}")
         
         # Display configuration info
         print(f"\nConfiguration:")

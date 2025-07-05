@@ -149,6 +149,25 @@ kaggle:
     **Generated on:** {timestamp}
     **Scraper Version:** {version}
 
+# Hugging Face upload configuration
+huggingface:
+  default_license: "cc0-1.0"
+  default_private: false
+  
+  # Dataset metadata
+  tags: ["religion", "names", "islam", "muslim", "dataset", "culture", "linguistics"]
+  languages: ["en", "ar"]
+  
+  # Default descriptions
+  description_template: |
+    A comprehensive collection of Muslim names with meanings scraped from muslimnames.com.
+    
+    This dataset contains {name_count} Muslim names with English names, Arabic names, meanings, and gender classifications.
+    
+    Data was collected using an automated scraper with respectful rate limiting from muslimnames.com.
+    
+    Perfect for cultural and linguistic research, name analysis, baby naming applications, Islamic studies, and data science projects.
+
 # CLI configuration
 cli:
   default_workers: 16
@@ -165,6 +184,8 @@ cli:
       python -m muslim_name_scrapper --output-dir data      # Custom output directory
       python -m muslim_name_scrapper --upload-kaggle        # Upload to Kaggle after scraping
       python -m muslim_name_scrapper --kaggle-title "My Dataset" --upload-kaggle  # Custom Kaggle title
+      python -m muslim_name_scrapper --upload-huggingface   # Upload to Hugging Face after scraping
+      python -m muslim_name_scrapper --hf-title "My Dataset" --hf-private --upload-huggingface  # Custom HF title (private)
 
 # Performance optimization settings
 performance:

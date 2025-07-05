@@ -11,6 +11,7 @@ A robust Python scraper for extracting Muslim names with meanings from [muslimna
 - **Error Handling**: Automatic retry logic and graceful failure handling
 - **Resume Capability**: Track completed pages for recovery
 - **Kaggle Integration**: Automatic dataset upload to Kaggle
+- **Hugging Face Integration**: Automatic dataset upload to Hugging Face Hub
 - **Configuration-Driven**: YAML-based configuration for easy customization
 
 ## Installation
@@ -36,6 +37,18 @@ pip install kaggle
 # 2. Create new API token (downloads kaggle.json)
 # 3. Place kaggle.json in ~/.kaggle/ directory
 # 4. Set permissions: chmod 600 ~/.kaggle/kaggle.json
+```
+
+4. (Optional) Setup Hugging Face for dataset uploads:
+```bash
+# Install Hugging Face Hub
+pip install huggingface_hub
+
+# Setup Hugging Face credentials
+# 1. Go to https://huggingface.co/settings/tokens
+# 2. Create new access token
+# 3. Login using the CLI: huggingface-cli login
+# 4. Paste your token when prompted
 ```
 
 ## Usage
@@ -64,6 +77,15 @@ python -m muslim_name_scrapper --upload-kaggle
 
 # Custom Kaggle dataset with private visibility
 python -m muslim_name_scrapper --upload-kaggle --kaggle-title "My Muslim Names Dataset" --kaggle-private
+
+# Upload to Hugging Face after scraping
+python -m muslim_name_scrapper --upload-huggingface
+
+# Custom Hugging Face dataset with private visibility
+python -m muslim_name_scrapper --upload-huggingface --hf-title "My Muslim Names Dataset" --hf-private
+
+# Upload to both Kaggle and Hugging Face
+python -m muslim_name_scrapper --upload-kaggle --upload-huggingface
 ```
 
 ### Python API
@@ -120,6 +142,30 @@ result = uploader.upload_dataset(
     title="Muslim Names Dataset",
     description="Comprehensive collection of Muslim names",
     public=True
+)
+```
+
+#### Hugging Face Upload
+```python
+from muslim_name_scrapper import MuslimNamesScraper
+
+# Scrape and upload to Hugging Face in one step
+scraper = MuslimNamesScraper()
+results = scraper.scrape_all(
+    upload_huggingface=True,
+    hf_title="Muslim Names Dataset 2024",
+    hf_private=False
+)
+
+# Or upload existing files separately
+from muslim_name_scrapper import HuggingFaceUploader
+
+uploader = HuggingFaceUploader()
+result = uploader.upload_dataset(
+    files=["data/names.csv", "data/names.json", "data/names.db"],
+    title="Muslim Names Dataset",
+    description="Comprehensive collection of Muslim names",
+    private=False
 )
 ```
 
@@ -197,6 +243,7 @@ The scraper follows a modular architecture with clear separation of concerns:
 - **`storage.py`**: Manages data persistence (CSV, SQLite, JSON)
 - **`progress.py`**: Tracks and displays scraping progress
 - **`kaggle_uploader.py`**: Handles dataset uploads to Kaggle platform
+- **`huggingface_uploader.py`**: Handles dataset uploads to Hugging Face Hub
 - **`config.py`**: Configuration management with YAML support
 
 ## Requirements
@@ -206,6 +253,8 @@ The scraper follows a modular architecture with clear separation of concerns:
 - beautifulsoup4
 - tqdm (optional, for progress bars)
 - PyYAML (optional, for YAML configuration)
+- kaggle (optional, for Kaggle uploads)
+- huggingface_hub (optional, for Hugging Face uploads)
 
 ## Error Handling
 
