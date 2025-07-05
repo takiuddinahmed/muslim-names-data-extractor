@@ -56,7 +56,7 @@ parser:
 storage:
   # CSV settings
   csv:
-    fieldnames: ["english_name", "arabic_name", "meaning", "url", "gender"]
+    fieldnames: ["english_name", "arabic_name", "meaning", "gender"]
     encoding: "utf-8"
   
   # Database settings
@@ -68,7 +68,6 @@ storage:
       english_name: "TEXT NOT NULL"
       arabic_name: "TEXT"
       meaning: "TEXT"
-      url: "TEXT"
       gender: "TEXT NOT NULL"
       created_at: "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     
@@ -122,7 +121,6 @@ kaggle:
     - English name
     - Arabic name (in Arabic script)
     - Meaning/definition
-    - Source URL
     - Gender classification (male/female)
     
     ## Files Included

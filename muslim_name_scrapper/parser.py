@@ -55,16 +55,10 @@ class HTMLParser:
                 lines = [line.strip() for line in full_text.split('\n') if line.strip()]
                 meaning = lines[-1] if len(lines) > 1 else ""
                 
-                # Extract URL
-                url = english_name_element.get('href', '') if english_name_element else ""
-                if url and not url.startswith('http'):
-                    url = f"{self.base_url}{url}"
-                
                 name_data = {
                     'english_name': english_name,
                     'arabic_name': arabic_name,
                     'meaning': meaning,
-                    'url': url,
                     'gender': gender
                 }
                 

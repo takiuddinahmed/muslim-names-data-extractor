@@ -48,7 +48,7 @@ class DataStorage:
         csv_path = os.path.join(self.output_dir, csv_pattern.format(timestamp=timestamp))
         csv_config = self.config.get_section('storage.csv')
         encoding = csv_config.get('encoding', 'utf-8')
-        fieldnames = csv_config.get('fieldnames', ['english_name', 'arabic_name', 'meaning', 'url', 'gender'])
+        fieldnames = csv_config.get('fieldnames', ['english_name', 'arabic_name', 'meaning', 'gender'])
         
         self.csv_file = open(csv_path, 'w', newline='', encoding=encoding)
         self.csv_writer = csv.DictWriter(self.csv_file, fieldnames=fieldnames)
@@ -119,7 +119,6 @@ class DataStorage:
                 english_name TEXT NOT NULL,
                 arabic_name TEXT,
                 meaning TEXT,
-                url TEXT,
                 gender TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
@@ -156,12 +155,12 @@ class DataStorage:
                 cursor = self.db_connection.cursor()
                 
                 insert_sql = f'''
-                    INSERT INTO {table_name} (english_name, arabic_name, meaning, url, gender)
-                    VALUES (?, ?, ?, ?, ?)
+                    INSERT INTO {table_name} (english_name, arabic_name, meaning, gender)
+                    VALUES (?, ?, ?, ?)
                 '''
                 cursor.executemany(insert_sql, [
                     (name['english_name'], name['arabic_name'], name['meaning'], 
-                     name['url'], name['gender']) for name in names
+                     name['gender']) for name in names
                 ])
                 self.db_connection.commit()
                 
