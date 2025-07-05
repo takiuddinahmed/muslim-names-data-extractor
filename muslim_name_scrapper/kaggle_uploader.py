@@ -74,10 +74,8 @@ class KaggleUploader:
             raise ValueError("No valid files found for upload")
         
         # Generate default title and description if not provided
-        timestamp = Path(valid_files[0]).stem.split('_')[-1] if '_' in Path(valid_files[0]).stem else "latest"
-        
         if not title:
-            title = f"Muslim Names Dataset {timestamp}"
+            title = "Muslim Names Dataset"
         
         if not description:
             description = f"""
@@ -118,7 +116,6 @@ Perfect for:
 
 This dataset is made available under the Creative Commons CC0 1.0 Universal license.
 
-**Generated on:** {timestamp}
 **Scraper Version:** 2.0.0
             """.strip()
         
@@ -155,7 +152,7 @@ This dataset is made available under the Creative Commons CC0 1.0 Universal lice
                         # Try to update existing dataset
                         self.kaggle_api.dataset_create_version(
                             folder=str(temp_path),
-                            version_notes=f"Updated dataset with latest scraped data - {timestamp}",
+                            version_notes="Updated dataset with latest scraped data",
                             quiet=False
                         )
                         self.logger.info(f"Successfully updated existing dataset: {metadata['id']}")

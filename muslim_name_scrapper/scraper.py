@@ -261,7 +261,6 @@ class MuslimNamesScraper:
     def scrape_all(self, output_dir=None, max_pages=None, upload_kaggle=False, kaggle_title=None, kaggle_public=None, kaggle_update=False, upload_huggingface=False, hf_title=None, hf_private=None, hf_update=False, hf_dataset_id=None):
         """Main method to scrape all names with immediate saving and optional uploads"""
         start_time = time.time()
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
         # Use config default for output_dir if not specified
         if output_dir is None:
@@ -273,7 +272,7 @@ class MuslimNamesScraper:
         try:
             # Initialize components with config
             self.data_storage = DataStorage(output_dir)
-            file_paths = self.data_storage.initialize_files(timestamp)
+            file_paths = self.data_storage.initialize_files()
             
             self.progress_tracker = ProgressTracker(file_paths['progress'])
             

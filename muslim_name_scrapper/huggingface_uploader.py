@@ -200,10 +200,8 @@ If you use this dataset in your research, please cite:
             raise ValueError("No valid files found for upload")
         
         # Generate default title and description if not provided
-        timestamp = Path(valid_files[0]).stem.split('_')[-1] if '_' in Path(valid_files[0]).stem else "latest"
-        
         if not title:
-            title = f"Muslim Names Dataset {timestamp}"
+            title = "Muslim Names Dataset"
         
         if not description:
             description = f"""A comprehensive collection of Muslim names with meanings scraped from muslimnames.com.

@@ -89,10 +89,10 @@ class Config:
                 ]
             },
             'file_patterns': {
-                'csv': 'muslim_names_{timestamp}.csv',
-                'json': 'muslim_names_{timestamp}.json',
-                'sqlite': 'muslim_names_{timestamp}.db',
-                'progress': 'progress_{timestamp}.json'
+                'csv': 'muslim_names.csv',
+                'json': 'muslim_names.json',
+                'sqlite': 'muslim_names.db',
+                'progress': 'progress.json'
             }
         },
         'progress': {
@@ -147,8 +147,7 @@ Perfect for:
 
 This dataset is made available under the Creative Commons CC0 1.0 Universal license.
 
-**Generated on:** {timestamp}
-**Scraper Version:** {version}"""
+    **Scraper Version:** {version}"""
         },
         'cli': {
             'default_workers': 16,

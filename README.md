@@ -117,7 +117,7 @@ html = network.fetch_page("https://muslimnames.com/boy-names")
 names = parser.parse_names_from_page(html, "male", 1)
 
 # Save data
-file_paths = storage.initialize_files("20240101_120000")
+file_paths = storage.initialize_files()
 storage.save_names_batch(names, 1, "male")
 ```
 
@@ -129,7 +129,7 @@ from muslim_name_scrapper import MuslimNamesScraper
 scraper = MuslimNamesScraper()
 results = scraper.scrape_all(
     upload_kaggle=True,
-    kaggle_title="Muslim Names Dataset 2024",
+    kaggle_title="Muslim Names Dataset",
     kaggle_public=True
 )
 
@@ -153,7 +153,7 @@ from muslim_name_scrapper import MuslimNamesScraper
 scraper = MuslimNamesScraper()
 results = scraper.scrape_all(
     upload_huggingface=True,
-    hf_title="Muslim Names Dataset 2024",
+    hf_title="Muslim Names Dataset",
     hf_private=False
 )
 
@@ -187,11 +187,11 @@ The scraper is optimized for your system:
 
 ## Output Files
 
-Each scraping session creates timestamped files:
-- `muslim_names_YYYYMMDD_HHMMSS.json` - JSON format
-- `muslim_names_YYYYMMDD_HHMMSS.csv` - CSV format
-- `muslim_names_YYYYMMDD_HHMMSS.db` - SQLite database
-- `progress_YYYYMMDD_HHMMSS.json` - Progress tracking
+Each scraping session creates files:
+- `muslim_names.json` - JSON format
+- `muslim_names.csv` - CSV format
+- `muslim_names.db` - SQLite database
+- `progress.json` - Progress tracking
 
 ## Data Structure
 

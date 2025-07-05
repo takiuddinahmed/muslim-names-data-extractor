@@ -15,13 +15,12 @@ from .config import get_config
 class DataStorage:
     """Handles data storage operations for CSV, SQLite, and JSON formats"""
     
-    def __init__(self, output_dir=None, timestamp=None):
+    def __init__(self, output_dir=None):
         # Load configuration
         self.config = get_config()
         
         # Use config default if not specified
         self.output_dir = output_dir or self.config.get('scraper.default_output_dir', 'data')
-        self.timestamp = timestamp
         self.logger = logging.getLogger(__name__)
         self.lock = Lock()
         
@@ -33,19 +32,19 @@ class DataStorage:
         # Data collection
         self.scraped_names = []
     
-    def initialize_files(self, timestamp):
+    def initialize_files(self):
         """Initialize output files for immediate writing"""
         os.makedirs(self.output_dir, exist_ok=True)
         
         # Get file patterns from config
         file_patterns = self.config.get_section('storage.file_patterns')
-        csv_pattern = file_patterns.get('csv', 'muslim_names_{timestamp}.csv')
-        sqlite_pattern = file_patterns.get('sqlite', 'muslim_names_{timestamp}.db')
-        json_pattern = file_patterns.get('json', 'muslim_names_{timestamp}.json')
-        progress_pattern = file_patterns.get('progress', 'progress_{timestamp}.json')
+        csv_pattern = file_patterns.get('csv', 'muslim_names.csv')
+        sqlite_pattern = file_patterns.get('sqlite', 'muslim_names.db')
+        json_pattern = file_patterns.get('json', 'muslim_names.json')
+        progress_pattern = file_patterns.get('progress', 'progress.json')
         
         # Initialize CSV file with config settings
-        csv_path = os.path.join(self.output_dir, csv_pattern.format(timestamp=timestamp))
+        csv_path = os.path.join(self.output_dir, csv_pattern)
         csv_config = self.config.get_section('storage.csv')
         encoding = csv_config.get('encoding', 'utf-8')
         fieldnames = csv_config.get('fieldnames', ['english_name', 'arabic_name', 'meaning', 'gender'])
@@ -55,7 +54,7 @@ class DataStorage:
         self.csv_writer.writeheader()
         
         # Initialize SQLite database with config schema
-        db_path = os.path.join(self.output_dir, sqlite_pattern.format(timestamp=timestamp))
+        db_path = os.path.join(self.output_dir, sqlite_pattern)
         self.db_connection = sqlite3.connect(db_path, check_same_thread=False)
         cursor = self.db_connection.cursor()
         
@@ -107,8 +106,8 @@ class DataStorage:
         return {
             'csv': csv_path,
             'sqlite': db_path,
-            'json': os.path.join(self.output_dir, json_pattern.format(timestamp=timestamp)),
-            'progress': os.path.join(self.output_dir, progress_pattern.format(timestamp=timestamp))
+            'json': os.path.join(self.output_dir, json_pattern),
+            'progress': os.path.join(self.output_dir, progress_pattern)
         }
     
     def _create_default_table(self, cursor, table_name):
