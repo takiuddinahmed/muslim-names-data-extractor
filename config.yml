@@ -1,0 +1,183 @@
+# Muslim Names Scraper Configuration
+# This file contains all default settings for the scraper
+
+# Application metadata
+app:
+  name: "Muslim Names Scraper"
+  version: "2.0.0"
+  author: "Md Takiuddin"
+  email: "contact@takiuddin.me"
+
+# Main scraper settings
+scraper:
+  base_url: "https://muslimnames.com"
+  max_workers: 16
+  max_retries: 3
+  backoff_factor: 0.3
+  default_output_dir: "data"
+  
+  # URL patterns
+  urls:
+    boy_names: "/boy-names"
+    girl_names: "/girl-names"
+
+# Network configuration
+network:
+  timeout: 15
+  max_connections: 32
+  max_size_multiplier: 2
+  
+  # HTTP headers
+  headers:
+    user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+    accept_language: "en-US,en;q=0.5"
+    accept_encoding: "gzip, deflate"
+    connection: "keep-alive"
+    upgrade_insecure_requests: "1"
+  
+  # Retry configuration
+  retry:
+    total: 3
+    backoff_factor: 0.3
+    status_forcelist: [429, 500, 502, 503, 504]
+    allowed_methods: ["HEAD", "GET", "OPTIONS"]
+    method_whitelist: ["HEAD", "GET", "OPTIONS"]  # Fallback for older urllib3
+
+# HTML parsing configuration
+parser:
+  name_row_class: "name_row"
+  boy_names_class: "name_boys"
+  girl_names_class: "name_girls"
+  arabic_name_class: "name_arabic"
+  pagination_style_contains: "text-align:center"
+
+# Data storage configuration
+storage:
+  # CSV settings
+  csv:
+    fieldnames: ["english_name", "arabic_name", "meaning", "url", "gender"]
+    encoding: "utf-8"
+  
+  # Database settings
+  database:
+    # SQLite table schema
+    table_name: "names"
+    schema:
+      id: "INTEGER PRIMARY KEY AUTOINCREMENT"
+      english_name: "TEXT NOT NULL"
+      arabic_name: "TEXT"
+      meaning: "TEXT"
+      url: "TEXT"
+      gender: "TEXT NOT NULL"
+      created_at: "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    
+    # Database indexes
+    indexes:
+      - name: "idx_english_name"
+        column: "english_name"
+      - name: "idx_gender"
+        column: "gender"
+      - name: "idx_arabic_name"
+        column: "arabic_name"
+  
+  # File naming
+  file_patterns:
+    csv: "muslim_names_{timestamp}.csv"
+    json: "muslim_names_{timestamp}.json"
+    sqlite: "muslim_names_{timestamp}.db"
+    progress: "progress_{timestamp}.json"
+
+# Progress tracking configuration
+progress:
+  save_interval: 10  # Save progress every N pages
+  bar_format: "{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]"
+  unit: "page"
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(levelname)s - %(message)s"
+  file: "scraper.log"
+  console: true
+  file_logging: true
+
+# Kaggle upload configuration
+kaggle:
+  default_license: "CC0-1.0"
+  default_public: true
+  
+  # Dataset metadata
+  keywords: ["religion", "names", "islam", "muslim", "dataset", "culture", "linguistics"]
+  
+  # Default descriptions
+  description_template: |
+    # Muslim Names Dataset
+    
+    A comprehensive collection of Muslim names with meanings scraped from muslimnames.com.
+    
+    ## Dataset Contents
+    
+    This dataset contains {name_count} Muslim names with the following information:
+    - English name
+    - Arabic name (in Arabic script)
+    - Meaning/definition
+    - Source URL
+    - Gender classification (male/female)
+    
+    ## Files Included
+    
+    - **CSV**: Spreadsheet-compatible format for easy analysis
+    - **JSON**: Machine-readable format for developers
+    - **SQLite**: Database format for SQL queries
+    
+    ## Data Source
+    
+    Data scraped from [muslimnames.com](https://muslimnames.com) using an automated scraper with respectful rate limiting.
+    
+    ## Usage
+    
+    Perfect for:
+    - Cultural and linguistic research
+    - Name analysis and statistics
+    - Baby naming applications
+    - Islamic studies
+    - Data science projects
+    
+    ## License
+    
+    This dataset is made available under the Creative Commons CC0 1.0 Universal license.
+    
+    **Generated on:** {timestamp}
+    **Scraper Version:** {version}
+
+# CLI configuration
+cli:
+  default_workers: 16
+  test_mode_pages: 2
+  
+  # Help text
+  description: "Scrape Muslim names from muslimnames.com"
+  examples: |
+    Examples:
+      python -m muslim_name_scrapper                        # Scrape all names
+      python -m muslim_name_scrapper --test                 # Test mode (2 pages per gender)
+      python -m muslim_name_scrapper --max-pages 5          # Limit to 5 pages per gender
+      python -m muslim_name_scrapper --workers 8            # Use 8 workers
+      python -m muslim_name_scrapper --output-dir data      # Custom output directory
+      python -m muslim_name_scrapper --upload-kaggle        # Upload to Kaggle after scraping
+      python -m muslim_name_scrapper --kaggle-title "My Dataset" --upload-kaggle  # Custom Kaggle title
+
+# Performance optimization settings
+performance:
+  # Memory management
+  batch_size: 100
+  max_memory_mb: 1024
+  
+  # Threading
+  min_workers: 1
+  max_workers: 64
+  
+  # Rate limiting
+  delay_between_requests: 0.1
+  retry_delay: 2.0 

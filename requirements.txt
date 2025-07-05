@@ -1,0 +1,9 @@
+requests>=2.25.1
+beautifulsoup4>=4.9.3
+lxml>=4.6.3
+tqdm>=4.61.2
+urllib3>=1.26.5
+# Optional: for YAML configuration files
+PyYAML>=6.0
+# Optional: for Kaggle dataset uploads
+kaggle>=1.5.12
