@@ -11,13 +11,14 @@ A robust Python scraper for extracting Muslim names with meanings from [muslimna
 - **Error Handling**: Automatic retry logic and graceful failure handling
 - **Resume Capability**: Track completed pages for recovery
 - **Kaggle Integration**: Automatic dataset upload to Kaggle
+- **Configuration-Driven**: YAML-based configuration for easy customization
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd muslim-name-scrapper
+git clone https://github.com/takiuddinahmed/muslim-names-data-extractor.git
+cd muslim-names-data-extractor
 ```
 
 2. Install dependencies:
@@ -124,6 +125,8 @@ result = uploader.upload_dataset(
 
 ## Configuration
 
+The scraper uses a YAML configuration file (`config.yml`) for easy customization:
+
 ### Default Settings
 - **Workers**: 16 parallel workers
 - **Output Directory**: `data/`
@@ -152,7 +155,6 @@ Each name entry contains:
   "english_name": "Ahmad",
   "arabic_name": "أحمد",
   "meaning": "Most commendable, most praiseworthy",
-  "url": "https://muslimnames.com/boy-names/ahmad",
   "gender": "male"
 }
 ```
@@ -160,8 +162,8 @@ Each name entry contains:
 ## Performance
 
 - **Estimated Dataset**: ~14,585 names total
-- **Execution Time**: 15-25 minutes for full dataset
-- **Speed**: 20-30 names/second
+- **Execution Time**: 40-50 seconds for full dataset
+- **Speed**: 300+ names/second
 - **Memory Usage**: Constant (data saved immediately)
 
 ## Project Structure
@@ -177,15 +179,12 @@ muslim-name-scrapper/
 │   ├── storage.py                # Data persistence
 │   ├── progress.py               # Progress tracking
 │   ├── kaggle_uploader.py        # Kaggle dataset uploads
+│   ├── config.py                 # Configuration management
 │   └── __main__.py               # Entry point
-├── experiment/                    # Development files
-│   ├── test_scraper.py           # Original test scraper
-│   └── full_scraper.py           # Original full scraper
+├── config.yml                     # YAML configuration file
 ├── run_scraper.py                # Simple run script
 ├── requirements.txt              # Dependencies
-├── README.md                     # This file
-├── PERFORMANCE.md                # Performance analysis
-└── DEVICE_OPTIMIZATION.md        # System optimization guide
+└── README.md                     # This file
 ```
 
 ## Architecture
@@ -198,6 +197,7 @@ The scraper follows a modular architecture with clear separation of concerns:
 - **`storage.py`**: Manages data persistence (CSV, SQLite, JSON)
 - **`progress.py`**: Tracks and displays scraping progress
 - **`kaggle_uploader.py`**: Handles dataset uploads to Kaggle platform
+- **`config.py`**: Configuration management with YAML support
 
 ## Requirements
 
@@ -205,6 +205,7 @@ The scraper follows a modular architecture with clear separation of concerns:
 - requests
 - beautifulsoup4
 - tqdm (optional, for progress bars)
+- PyYAML (optional, for YAML configuration)
 
 ## Error Handling
 
